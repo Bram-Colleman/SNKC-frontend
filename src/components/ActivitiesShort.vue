@@ -30,33 +30,6 @@ function getActivities() {
   });
 }
 
-function addActivity() {
-  let data = {
-  titel: activity.titel,
-  plaats: activity.plaats,
-  datum: activity.datum,
-  tijd: activity.tijd,
-  opmerking: activity.opmerking
-};
-  fetch ("http://localhost:3001/api/v1/activiteiten", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data),
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    if(data.status == "Success") {
-      getActivities();
-      addView = false;
-    }
-  })
-  .catch((error) => {
-    console.log("Something went wrong");
-  })
-}
-
 function setDateFormat(dateString) {
   let date = new Date(Date.parse(dateString));
   return date.toLocaleDateString('en-GB',  {day: "numeric", month: "short", year: "numeric"});
@@ -73,53 +46,18 @@ onMounted(() => {
   <div class="activityContainer">
 
   <div class="flex">
-      <el-button type="danger" @click="addView= !addView">Nieuwe activiteit</el-button>
-      
-  <div v-if="addView">
-    <el-form :model="activity" label-width="120px" class="form">
-      <el-form-item label="Titel">
-        <el-input v-model="activity.titel" />
-      </el-form-item>
-      <el-form-item label="Plaats">
-        <el-input v-model="activity.plaats" />
-      </el-form-item>
-      <el-form-item label="Tijdstip">
-        <el-col :span="3">
-          <el-date-picker v-model="activity.datum" type="date" placeholder="Datum" style="width: 100%"/>
-        </el-col>
-        <el-col :span="1" class="text-center">
-          <span class="text-gray-500"></span>
-        </el-col>
-        <el-col :span="3">
-          <el-time-select v-model="activity.tijd" start="00:00" step="00:15" end="23:59" placeholder="Uur" format="HH:mm"/>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Opmerking">
-        <el-input v-model="activity.opmerking" type="textarea"/>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="danger" @click="addActivity">Bevestig</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
-  
       <table>
         <thead>
           <tr>
-            <th class="t25">Titel</th>
-            <th class="t10">Datum</th>
-            <th>Opmerking</th>
-            <th class="t10">Plaats</th>
-            <th class="t10">Uur</th>
+            <th>Titel</th>
+            <th>Datum</th>
+
           </tr>
         </thead>
         <tbody>
           <tr v-for="a in activities" :key="a.titel">
             <td>{{ a.titel }}</td>
             <td>{{ setDateFormat(a.datum) }}</td>
-            <td>{{ a.opmerking }}</td>
-            <td>{{ a.plaats }}</td>
-            <td>{{ a.uur }}</td>
           </tr>
         </tbody>
       </table>
